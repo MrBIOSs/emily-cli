@@ -1,15 +1,27 @@
 name: emily
-description: A sample command-line application with basic argument parsing.
+description: Emily's CLI assistant eases the chore of developing apps on Flutter.
 version: 0.0.1
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/MrBIOSs/emily-cli
+
+platforms:
+  android:
+  ios:
+  linux:
+  macos:
+  web:
+  windows:
 
 environment:
-  sdk: ^3.6.0
+  sdk: ^3.7.2
 
-# Add regular dependencies here.
 dependencies:
+  mason_logger: ^0.3.3
   args: ^2.5.0
+  dcli: ^7.0.2
 
 dev_dependencies:
   lints: ^5.0.0
   test: ^1.24.0
+
+executables:
+  emily: emily

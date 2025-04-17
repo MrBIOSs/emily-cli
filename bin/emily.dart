@@ -1,61 +1,31 @@
-import 'package:args/args.dart';
+import 'package:dcli/dcli.dart' as dcli;
 
-const String version = '0.0.1';
+import 'package:emily/commands/commands.dart';
+import 'package:emily/constants/constants.dart';
+import 'package:emily/utils/console.dart';
 
-ArgParser buildParser() {
-  return ArgParser()
-    ..addFlag(
-      'help',
-      abbr: 'h',
-      negatable: false,
-      help: 'Print this usage information.',
-    )
-    ..addFlag(
-      'verbose',
-      abbr: 'v',
-      negatable: false,
-      help: 'Show additional command output.',
-    )
-    ..addFlag(
-      'version',
-      negatable: false,
-      help: 'Print the tool version.',
-    );
-}
+void main(List<String> arguments) async {
+  if (arguments.isEmpty) {
+    Console.writeLine(dcli.red('Enter the command: emily <command>'));
+    return;
+  }
+  Console.write(dcli.yellow(Constants.kLogo));
+  Console.writeLine();
 
-void printUsage(ArgParser argParser) {
-  print('Usage: dart emily.dart <flags> [arguments]');
-  print(argParser.usage);
-}
+  switch (arguments.first) {
+    case Constants.kCreateCommand:
+      await CreateCommand.action();
+      break;
 
-void main(List<String> arguments) {
-  final ArgParser argParser = buildParser();
-  try {
-    final ArgResults results = argParser.parse(arguments);
-    bool verbose = false;
+    case Constants.kConnectCommand:
+      await ConnectCommand.action();
+      break;
 
-    // Process the parsed arguments.
-    if (results.flag('help')) {
-      printUsage(argParser);
-      return;
-    }
-    if (results.flag('version')) {
-      print('emily version: $version');
-      return;
-    }
-    if (results.flag('verbose')) {
-      verbose = true;
-    }
+    case Constants.kHelpCommand:
+      await HelpCommand.action();
+      break;
 
-    // Act on the arguments provided.
-    print('Positional arguments: ${results.rest}');
-    if (verbose) {
-      print('[VERBOSE] All arguments: ${results.arguments}');
-    }
-  } on FormatException catch (e) {
-    // Print usage information if an invalid argument was provided.
-    print(e.message);
-    print('');
-    printUsage(argParser);
+    default:
+      Console.writeLine(dcli.red('Unknown command!'));
   }
 }
