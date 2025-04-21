@@ -5,6 +5,7 @@ Command Line Interface (CLI) to create a Flutter project and automate routine pr
 The assistant knows how to:
 - Create a Flutter project template.
 - Connect to a remote repository in Github.
+- generate a keystore file.
 
 ## Getting Started
 Activate globally:
@@ -20,10 +21,15 @@ dart pub global activate --source path /path/to/emily
 
 **Create a Flutter project template:**
 ```sh
-emily create
+emily create -template
+```
+
+**Generate a keystore file:**
+```sh
+emily create -key
 ```
 
 **Connect a remote Github repository:**
 ```sh
-emily connect
+emily connect -github
 ```

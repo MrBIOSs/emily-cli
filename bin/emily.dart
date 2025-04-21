@@ -4,7 +4,7 @@ import 'package:emily/commands/commands.dart';
 import 'package:emily/constants/constants.dart';
 import 'package:emily/utils/console.dart';
 
-void main(List<String> arguments) async {
+void main(List<String> arguments) {
   if (arguments.isEmpty) {
     Console.writeLine(dcli.red('Enter the command: emily <command>'));
     return;
@@ -14,15 +14,24 @@ void main(List<String> arguments) async {
 
   switch (arguments.first) {
     case Constants.kCreateCommand:
-      await CreateCommand.action();
+      if (arguments.length == 1) {
+        HelpCommand.showCreateCommand();
+      } else {
+        if (arguments[1] == Constants.kTemplateArgument) CreateCommand.flutterTemplate();
+        if (arguments[1] == Constants.kKeyArgument) CreateCommand.keystore();
+      }
       break;
 
     case Constants.kConnectCommand:
-      await ConnectCommand.action();
+      if (arguments.length == 1) {
+        HelpCommand.showConnectCommand();
+      } else {
+        if (arguments[1] == Constants.kGithubArgument) ConnectCommand.github();
+      }
       break;
 
     case Constants.kHelpCommand:
-      await HelpCommand.action();
+      HelpCommand.action();
       break;
 
     default:

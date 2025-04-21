@@ -1,5 +1,3 @@
-import 'dart:io';
-
 class Constants {
   static const kLogo = '''
   ░▒▓████████▓▒░▒▓██████████████▓▒░░▒▓█▓▒░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░ 
@@ -14,24 +12,34 @@ class Constants {
   static const kConnectCommand = 'connect';
   static const kHelpCommand = 'help';
 
+  static const kTemplateArgument = '-template';
+  static const kKeyArgument = '-key';
+  static const kGithubArgument = '-github';
+
   static const kUpdateDartVersion = 'Please update your version of Dart.';
 
-  static final kCurrentPath = Directory.current.path;
   static const kEnterProjectName = 'Enter a project name: ';
+  static const kEnterKeyName = 'Enter a key name: ';
   static const kEnterValidProjectName = 'Please enter a valid project name (example_app): ';
-  static const kNeedSpecifyPath = 'Do you need specify path? Note if you select "No" project will be created '
-      'in a current location (Yes/No): ';
+  static const kNeedSpecifyPath = 'Do I need to specify a path? Note that if you select “No”, '
+      'the actions will be applied at the current location (Yes/No): ';
   static const kYes = 'yes';
   static const kNo = 'no';
-  static const kEnterPath = 'Please specify the path where you want to create the project: ';
+  static const kEnterPath = 'Specify the path where you want to apply the action: ';
+  static const kEnterKeyPassword = 'Enter the password for the key (Abc123): ';
   static const kInvalidPath = 'Invalid path. Please specify a valid path: ';
-  static const kAppName = 'Please specify the app display name: ';
+  static const kEnterAppName = 'Please specify the app display name: ';
+  static const kEnterName = 'Please specify the owner is name: ';
+  static const kEnterOrg = 'Please specify the name of the organization: ';
+  static const kEnterCity = 'Please enter a city: ';
+  static const kEnterState = 'Please enter the name of your state or province: ';
+  static const kEnterCountryCode = 'Enter the country code (EN): ';
   static const kInvalidValue = 'Invalid value';
-  static const kAppOrgBundle = 'Please specify org bundle id (com.example): ';
-  static const kProjectDescription = 'Please specify project description: ';
+  static const kInvalidPassword = 'Must be at least 6 characters';
+  static const kEnterAppOrgBundle = 'Please specify org bundle id (com.example): ';
+  static const kEnterProjectDescription = 'Please specify project description: ';
   static const kChoosePlatform = 'Please choose the platforms: ';
 
-  static const kEnterProjectPath = 'Please specify the path to the project: ';
-  static const kUsernameGithub = 'Please specify your github username: ';
-  static const kRepositoryGithub = 'please specify the name of the github repository: ';
+  static const kEnterUsernameGithub = 'Please specify your github username: ';
+  static const kEnterRepositoryGithub = 'please specify the name of the github repository: ';
 }

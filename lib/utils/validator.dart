@@ -16,8 +16,10 @@ class Validator {
   /// (lowercase letters separated by underscores)
   static final _snakeCaseRegex = RegExp(r'^[a-z]+(_[a-z]+)*$');
   static final _appNameRegex = RegExp(r'^[^\n\t\r\f\v]{1,255}$');
+  static final _nameRegex = RegExp(r'^[a-zA-Z\s]+$');
   static final _orgPackageRegex = RegExp(r'^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*$');
   static final _repositoryGithubRegex = RegExp(r'^[a-zA-Z-_]+$');
+  static final _passwordRegex = RegExp(r'^[a-zA-Z0-9]+$');
 
   static Future<bool> checkVersion() async {
     final isOldVersion = await ScriptService.isDartOldVersion('3.7.2');
@@ -38,6 +40,13 @@ class Validator {
     return (_onlyStringRegex.hasMatch(name) || _snakeCaseRegex.hasMatch(name));
   }
 
+  static bool isValidPassword(String? password) {
+    if (password == null) return false;
+    if (password.length < 6) return false;
+
+    return _passwordRegex.hasMatch(password);
+  }
+
   /// Returns true if the given path exists
   ///
   /// If the [path] parameter is null, the method returns false
@@ -48,6 +57,10 @@ class Validator {
     return directory.existsSync();
   }
 
+  static bool isValidName(String? input) {
+    return _isValidInput(input, _nameRegex);
+  }
+
   static bool isValidAppName(String? input) {
     return _isValidInput(input, _appNameRegex);
   }
@@ -56,7 +69,7 @@ class Validator {
     return _isValidInput(input, _orgPackageRegex);
   }
 
-  static bool isValidUsername(String? input) {
+  static bool isValidString(String? input) {
     return _isValidInput(input, _onlyStringRegex);
   }
 

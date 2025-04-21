@@ -1,6 +1,6 @@
 name: emily
 description: Emily's CLI assistant eases the chore of developing apps on Flutter.
-version: 0.0.1
+version: 0.1.0
 repository: https://github.com/MrBIOSs/emily-cli
 
 platforms:

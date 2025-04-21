@@ -32,8 +32,6 @@ class ScriptService {
     return false;
   }
 
-
-
   // static Future<void> flutterBuild(String modulePath) async {
   //   final ProcessResult pubGetProcess = await Process.run(
   //     'dart',

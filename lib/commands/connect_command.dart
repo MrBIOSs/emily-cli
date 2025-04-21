@@ -3,28 +3,23 @@ import 'dart:io';
 import 'package:dcli/dcli.dart' as dcli;
 
 import 'package:emily/constants/constants.dart';
-import 'package:emily/services/input_service.dart';
-import 'package:emily/utils/console.dart';
-import 'package:emily/utils/validator.dart';
+import 'package:emily/services/services.dart';
+import 'package:emily/utils/utils.dart';
 
 class ConnectCommand {
-  static Future<void> action() async {
+  static Future<void> github() async {
     if (await Validator.checkVersion()) return;
 
-    final projectPath = InputService.getValidatedInput(
-        consoleMessage: Constants.kEnterProjectPath,
-        errorMessage: Constants.kInvalidPath,
-        functionValidator: Validator.isValidPath
-    );
+    final projectPath = DirectoryService.choosePath();
 
     final usernameGithub = InputService.getValidatedInput(
-        consoleMessage: Constants.kUsernameGithub,
+        consoleMessage: Constants.kEnterUsernameGithub,
         errorMessage: Constants.kInvalidValue,
-        functionValidator: Validator.isValidUsername
+        functionValidator: Validator.isValidString
     );
 
     final repositoryGithub = InputService.getValidatedInput(
-        consoleMessage: Constants.kRepositoryGithub,
+        consoleMessage: Constants.kEnterRepositoryGithub,
         errorMessage: Constants.kInvalidValue,
         functionValidator: Validator.isValidRepositoryGithub
     );
@@ -57,6 +52,6 @@ class ConnectCommand {
   }
 
   static String _failConnectProject(String? error) {
-    return 'Failed to connect the project to Github: $error';
+    return '❌  Failed to connect the project to Github: $error';
   }
 }
