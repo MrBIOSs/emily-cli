@@ -8,8 +8,6 @@ import 'package:emily/utils/utils.dart';
 
 class ConnectCommand {
   static Future<void> github() async {
-    if (await Validator.checkVersion()) return;
-
     final projectPath = DirectoryService.choosePath();
 
     final usernameGithub = InputService.getValidatedInput(

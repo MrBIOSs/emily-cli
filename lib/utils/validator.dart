@@ -57,6 +57,16 @@ class Validator {
     return directory.existsSync();
   }
 
+  /// Returns true if the given input string is a valid single module
+  ///
+  /// A valid name is either a snake_case string
+  /// If the [input] parameter is null or empty, the method returns false
+  static bool isValidSingleString(String? input) {
+    if (input == null || input.isEmpty) return false;
+
+    return _snakeCaseRegex.hasMatch(input.trim());
+  }
+
   static bool isValidName(String? input) {
     return _isValidInput(input, _nameRegex);
   }

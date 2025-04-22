@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:dcli/dcli.dart';
-import 'package:emily/utils/converter.dart';
+import 'package:emily/utils/utils.dart';
 
 /// This class provides a set of utility functions for working with scripts
 /// in a Flutter project.
@@ -32,25 +32,52 @@ class ScriptService {
     return false;
   }
 
-  // static Future<void> flutterBuild(String modulePath) async {
-  //   final ProcessResult pubGetProcess = await Process.run(
-  //     'dart',
-  //     <String>[
-  //       'pub',
-  //       'run',
-  //       'build_runner',
-  //       'build',
-  //       '--delete-conflicting-outputs'
-  //     ],
-  //     workingDirectory: modulePath,
-  //     runInShell: true,
-  //   );
-  //   if (pubGetProcess.exitCode != 0) {
-  //     stdout.writeln(red(
-  //         '❌  Error running flutter pub get for $modulePath : ${pubGetProcess.stderr}'));
-  //   } else {
-  //     stdout.writeln(
-  //         green('✅  Successfully ran flutter pub get for $modulePath'));
-  //   }
-  // }
+  /// Adds packages to a specific project.
+  ///
+  /// [packages] is a list of package names to add.
+  /// [projectPath] is the path to the working directory.
+  ///
+  /// If the command is successful, a success message is printed to the console.
+  /// If the command fails, an error message is printed to the console.
+  static Future<void> addPackages({
+    required List<String> packages,
+    bool isDevDependency = false,
+    required String projectPath
+  }) async {
+    final processResult = await Process.run(
+        'flutter',
+        isDevDependency ? <String>['pub', 'add', '-d', ...packages] : <String>['pub', 'add', ...packages],
+        workingDirectory: projectPath,
+        runInShell: true
+    );
+
+    if (processResult.exitCode != 0) {
+      Console.writeLine(red('❌  Failed to add packages to pubspec: ${processResult.stderr}'));
+      exit(1);
+    } else {
+      Console.writeLine(green('✅  Packages added to pubspec'));
+    }
+  }
+
+  /// Runs `flutter pub get` for a specific project.
+  ///
+  /// [projectPath] is the path to the project to get packages for.
+  ///
+  /// If the command is successful, a success message is printed to the console.
+  /// If the command fails, an error message is printed to the console.
+  static Future<void> flutterPubGet(String projectPath) async {
+    final pubGetProcess = await Process.run(
+      'flutter',
+      <String>['pub', 'get'],
+      workingDirectory: projectPath,
+      runInShell: true
+    );
+
+    if (pubGetProcess.exitCode != 0) {
+      Console.writeLine(red('❌  Error running flutter pub get: ${pubGetProcess.stderr}'));
+      exit(1);
+    } else {
+      Console.writeLine(green('✅  Successfully ran flutter pub get!'));
+    }
+  }
 }

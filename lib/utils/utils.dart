@@ -1,3 +1,4 @@
+export 'extension/extension.dart';
 export 'converter.dart';
 export 'console.dart';
 export 'validator.dart';

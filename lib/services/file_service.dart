@@ -31,4 +31,9 @@ class FileService {
     content = content.replaceAll(oldString, newString);
     await file.writeAsString(content);
   }
+
+  static Future<void> createFile({required String filePath, String content = ''}) async {
+    final file = File(filePath);
+    await file.writeAsString(content);
+  }
 }

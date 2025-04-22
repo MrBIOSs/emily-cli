@@ -9,8 +9,6 @@ import 'package:emily/utils/utils.dart';
 
 class CreateCommand {
   static Future<void> flutterTemplate() async {
-    if (await Validator.checkVersion()) return;
-
     final logger = Logger();
 
     final projectName = InputService.getValidatedInput(
@@ -61,7 +59,8 @@ class CreateCommand {
     );
 
     if (process.exitCode != 0) {
-      Console.writeLine(dcli.red('Failed to create Flutter project: ${process.stderr}'));
+      Console.writeLine(dcli.red('❌  Failed to create Flutter project: ${process.stderr}'));
+      exit(1);
     }
 
     await FileModifier.changeAppName(
@@ -70,33 +69,41 @@ class CreateCommand {
       path: projectPath
     );
 
-    DirectoryService.buildStructure(projectPath);
+    final directories = [
+      'assets/fonts',
+      'assets/icons',
+      'assets/images',
+      'assets/launcher_icon',
+      'assets/splash',
+      'lib/api/dto',
+      'lib/api/requests',
+      'lib/init',
+      'lib/features',
+      'lib/core',
+      'lib/repositories',
+      'lib/router',
+      'lib/ui/images',
+      'lib/ui/icons',
+      'lib/ui/theme',
+      'lib/ui/widgets',
+      'lib/utils/mixin',
+      'lib/utils/extensions',
+      'docs'
+    ];
+
+    DirectoryService.buildStructure(projectPath: projectPath, directories: directories);
 
     Console.writeLine(dcli.green('✅  The project was created successfully!'));
   }
 
   static Future<void> keystore() async {
-    if (await Validator.checkVersion()) return;
-
     final keystoreName = InputService.getValidatedInput(
         consoleMessage: Constants.kEnterKeyName,
         errorMessage: Constants.kInvalidValue,
         functionValidator: Validator.isValidProjectName
     );
 
-    String path = DirectoryService.choosePath();
-    String? projectPath;
-
-    while (Validator.isValidPath('$path/android') == false) {
-      Console.writeLine(dcli.red('❌  Project folder not found'));
-      path = InputService.getValidatedInput(
-          consoleMessage: Constants.kEnterPath,
-          errorMessage: Constants.kInvalidPath,
-          functionValidator: Validator.isValidPath
-      ) ?? '';
-    }
-
-    projectPath = path;
+    final projectPath = DirectoryService.getValidProjectPath('android');
 
     final password = InputService.getValidatedInput(
         consoleMessage: Constants.kEnterKeyPassword,
@@ -181,11 +188,11 @@ class CreateCommand {
 
     if (await process.exitCode != 0) {
       Console.writeLine(dcli.red('❌  Failed to create key: ${process.stderr}'));
+      exit(1);
     }
 
     Console.writeLine(dcli.green('✅  (1/2) The key was created successfully!'));
 
-    final file = File('$projectPath/android/key.properties');
     final content = '''
 storePassword=$password
 keyPassword=$password
@@ -193,10 +200,156 @@ keyAlias=upload
 storeFile=$keystoreName.jks
     ''';
 
-    await file.writeAsString(content);
-
+    FileService.createFile(filePath: '$projectPath/android/key.properties', content: content);
     FileModifier.addContentToBuildGradle(projectPath);
 
     Console.writeLine(dcli.green('✅  (2/2) Data written successfully!'));
+  }
+
+  static Future<void> feature() async {
+    final featureName = InputService.getValidatedInput(
+        consoleMessage: Constants.kEnterFeatureName,
+        errorMessage: Constants.kInvalidValue,
+        functionValidator: Validator.isValidSingleString
+    ).snakeCase();
+
+    final projectPath = DirectoryService.getValidProjectPath('lib/features');
+
+    final directories = [
+      'lib/features/$featureName',
+      'lib/features/$featureName/logic',
+      'lib/features/$featureName/logic/utils',
+      'lib/features/$featureName/view',
+      'lib/features/$featureName/view/widgets',
+      'lib/features/$featureName/models'
+    ];
+
+    await DirectoryService.buildStructure(projectPath: projectPath, directories: directories);
+
+    FileService.createFile(
+        filePath: '$projectPath/lib/features/$featureName/$featureName.dart',
+        content: '''export 'view/view.dart';'''
+    );
+    FileService.createFile(filePath: '$projectPath/lib/features/$featureName/logic/utils/utils.dart');
+    FileService.createFile(filePath: '$projectPath/lib/features/$featureName/view/view.dart');
+    FileService.createFile(filePath: '$projectPath/lib/features/$featureName/view/widgets/widgets.dart');
+    FileService.createFile(filePath: '$projectPath/lib/features/$featureName/models/models.dart');
+
+    Console.writeLine(dcli.green('✅  The folder structure for feature has been successfully created!'));
+  }
+
+  static Future<void> bloc() async {
+    final blocName = InputService.getValidatedInput(
+        consoleMessage: Constants.kEnterBlocName,
+        errorMessage: Constants.kInvalidValue,
+        functionValidator: Validator.isValidSingleString
+    ).snakeCase();
+
+    final blocClassName = blocName.toCamelCase();
+    final path = DirectoryService.choosePath();
+
+    FileService.createFile(
+        filePath: '$path/${blocName}_bloc.dart',
+        content: '''
+part '${blocName}_event.dart';
+part '${blocName}_state.dart';
+
+class ${blocClassName}Bloc extends Bloc<${blocClassName}Event, ${blocClassName}State> {
+  ${blocClassName}Bloc() : super(${blocClassName}Initial()) {
+    on<Example>(_example);
+  }
+  
+  Future<void> _example(
+    Example event,
+    Emitter<${blocClassName}State> emit
+  ) async {
+    
+  }
+}
+        '''
+    );
+
+    FileService.createFile(
+        filePath: '$path/${blocName}_event.dart',
+        content: '''
+part of '${blocName}_bloc.dart';
+
+sealed class ${blocClassName}Event extends Equatable {
+  const ${blocClassName}Event();
+  
+  @override
+  List<Object> get props => [];
+}
+
+final class Example extends ${blocClassName}Event {}
+        '''
+    );
+
+    FileService.createFile(
+        filePath: '$path/${blocName}_state.dart',
+        content: '''
+part of '${blocName}_bloc.dart';
+
+sealed class ${blocClassName}State extends Equatable {
+  @override
+  List<Object> get props => [];
+}
+
+final class ${blocClassName}Initial extends ${blocClassName}State {}
+
+final class ${blocClassName}Loading extends ${blocClassName}State {}
+
+final class ${blocClassName}Loaded extends ${blocClassName}State {}
+
+final class ${blocClassName}Failure extends ${blocClassName}State {
+  ${blocClassName}Failure(this.error);
+  final Object error;
+
+  @override
+  List<Object> get props => [error];
+}
+        '''
+    );
+
+    Console.writeLine(dcli.green('✅  Bloc successfully created!'));
+  }
+
+  static Future<void> cubit() async {
+    final cubitName = InputService.getValidatedInput(
+        consoleMessage: Constants.kEnterBlocName,
+        errorMessage: Constants.kInvalidValue,
+        functionValidator: Validator.isValidSingleString
+    ).snakeCase();
+
+    final cubitClassName = cubitName.toCamelCase();
+    final path = DirectoryService.choosePath();
+
+    FileService.createFile(
+        filePath: '$path/${cubitName}_cubit.dart',
+        content: '''
+part '${cubitName}_state.dart';
+
+class ${cubitClassName}Cubit extends Cubit<${cubitClassName}State> {
+  ${cubitClassName}Cubit() : super(${cubitClassName}State());
+  
+}
+        '''
+    );
+
+    FileService.createFile(
+        filePath: '$path/${cubitName}_state.dart',
+        content: '''
+part of '${cubitName}_cubit.dart';
+
+class ${cubitClassName}State extends Equatable {
+  const ${cubitClassName}State();
+  
+  @override
+  List<Object> get props => [];
+}
+        '''
+    );
+
+    Console.writeLine(dcli.green('✅  Cubit successfully created!'));
   }
 }

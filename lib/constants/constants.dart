@@ -10,11 +10,16 @@ class Constants {
   ''';
   static const kCreateCommand = 'create';
   static const kConnectCommand = 'connect';
+  static const kAddCommand = 'add';
   static const kHelpCommand = 'help';
 
   static const kTemplateArgument = '-template';
   static const kKeyArgument = '-key';
+  static const kFeatureArgument = '-feature';
+  static const kBlocArgument = '-bloc';
+  static const kCubitArgument = '-cubit';
   static const kGithubArgument = '-github';
+  static const kNativeSplashArgument = '-flutter_native_splash';
 
   static const kUpdateDartVersion = 'Please update your version of Dart.';
 
@@ -39,7 +44,12 @@ class Constants {
   static const kEnterAppOrgBundle = 'Please specify org bundle id (com.example): ';
   static const kEnterProjectDescription = 'Please specify project description: ';
   static const kChoosePlatform = 'Please choose the platforms: ';
+  static const kFolderNotFound = '❌  Project folder not found';
+  static const kEnterFeatureName = 'Enter a feature name (example_feature): ';
+  static const kEnterBlocName = 'Enter a bloc/cubit name (example_name): ';
 
   static const kEnterUsernameGithub = 'Please specify your github username: ';
-  static const kEnterRepositoryGithub = 'please specify the name of the github repository: ';
+  static const kEnterRepositoryGithub = 'Please specify the name of the github repository: ';
+
+  static const kEnterPackageName = 'Please specify the name of the package: ';
 }

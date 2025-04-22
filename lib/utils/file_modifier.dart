@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:emily/services/file_service.dart';
 
 class FileModifier {
-  static const _pubspecPath = 'pubspec.yaml';
   static const _fileGradlePath = '/android/app/build.gradle';
   static const _fileGradleKtsPath = '/android/app/build.gradle.kts';
   static const _fileAndroidManifestPath = '/android/app/src/main/AndroidManifest.xml';
